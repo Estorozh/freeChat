@@ -6,8 +6,8 @@ import {
   Toolbar,
   Typography,
 } from '@material-ui/core';
-import ListRoom from './components/ListRoom/ListRoom';
-import Messages from './components/Messages/Messages';
+import ListRoom from './ListRoom/ListRoom';
+import Messages from './Messages/Messages';
 import { Menu as MenuIcon } from '@material-ui/icons';
 import { makeStyles, createStyles } from '@material-ui/core/styles';
 import { Redirect } from 'react-router-dom';

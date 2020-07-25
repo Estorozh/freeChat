@@ -4,20 +4,20 @@ const BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
   .BundleAnalyzerPlugin;
 
 module.exports = {
-  entry: './src/index.jsx',
+  entry: './client/index.jsx',
   devtool: 'inline-source-map',
   resolve: {
     extensions: ['.js', '.jsx', '.json'],
     alias: {
       // components: path.resolve(__dirname, 'src/components'),
-      '@': path.resolve(__dirname, 'src'),
-      '@c': path.resolve(__dirname, 'src/components'),
-      '@r': path.resolve(__dirname, 'src/redux'),
+      '@': path.resolve(__dirname, 'client'),
+      '@c': path.resolve(__dirname, 'client/components'),
+      '@r': path.resolve(__dirname, 'client/redux'),
     },
   },
   output: {
     path: path.join(__dirname, '/dist'),
-    filename: '[name].[hash].js',
+    filename: '[name].js',
   },
   optimization: {
     splitChunks: {
@@ -50,6 +50,6 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: './public/index.html',
     }),
-    new BundleAnalyzerPlugin(),
+    new BundleAnalyzerPlugin({ openAnalyzer: false }),
   ],
 };
