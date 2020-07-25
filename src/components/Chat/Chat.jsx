@@ -10,6 +10,7 @@ import ListRoom from './components/ListRoom/ListRoom';
 import Messages from './components/Messages/Messages';
 import { Menu as MenuIcon } from '@material-ui/icons';
 import { makeStyles, createStyles } from '@material-ui/core/styles';
+import { Redirect } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -28,7 +29,7 @@ const useStyles = makeStyles((theme) =>
   })
 );
 
-function Chat() {
+function Chat(props) {
   const classes = useStyles();
   const [mobileOpen, setMobileOpen] = React.useState(false);
 
@@ -36,8 +37,11 @@ function Chat() {
     setMobileOpen(!mobileOpen);
   };
 
+  props.authFromLocalStorage({ type: 'LOGIN_FROM_LOCALESTORAGE' });
+
   return (
     <>
+      {!localStorage.getItem('isAuth') && <Redirect to="/" />}
       <CssBaseline />
       <AppBar position="fixed" className={classes.appBar}>
         <Toolbar>
@@ -52,6 +56,9 @@ function Chat() {
           </IconButton>
           <Typography variant="h6" noWrap>
             Free Chat
+          </Typography>
+          <Typography variant="h6" noWrap style={{ marginLeft: 'auto' }}>
+            {props.name}
           </Typography>
         </Toolbar>
       </AppBar>

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { AddDropDownMenu } from '@c/_elements/AddDropDownMenu';
 import { makeStyles, createStyles, useTheme } from '@material-ui/core/styles';
 import {
@@ -10,6 +10,8 @@ import {
   List,
   ListItem,
   ListItemText,
+  Tabs,
+  Tab,
 } from '@material-ui/core';
 import { rooms } from '@/mock-file.json';
 
@@ -26,13 +28,16 @@ const useStyles = makeStyles((theme) =>
     drawerPaper: {
       width: drawerWidth,
     },
+    toggleRooms: {
+      minWidth: '50%',
+    },
     searchRoom: {
       width: 260,
       marginTop: 5,
       left: 'calc(50% - 130px)',
     },
     rooms: {
-      height: 'calc(100% - 52px)',
+      height: 'calc(100vh - 120px)',
       overflowY: 'auto',
     },
     selectList: {
@@ -47,26 +52,25 @@ const useStyles = makeStyles((theme) =>
 const ListRoom = (props) => {
   const classes = useStyles();
   const theme = useTheme();
+  const [toggleList, setToggleList] = useState(0);
   // const container =
   //   window !== undefined ? () => window().document.body : undefined;
+  const handleToggleList = (_, val) => {
+    setToggleList(val);
+  };
 
   const listRoom = (
-    <div>
-      <div className={classes.selectList}>
-        {[
-          { href: '#personal', text: 'personal' },
-          { href: '#allRoom', text: 'all rooms' },
-        ].map((props) => (
-          <Button
-            variant="contained"
-            color="primary"
-            href={props.href}
-            key={props.text}
-          >
-            {props.text}
-          </Button>
-        ))}
-      </div>
+    <>
+      <Tabs
+        className={classes.selectList}
+        value={toggleList}
+        onChange={handleToggleList}
+        textColor="primary"
+        indicatorColor="primary"
+      >
+        <Tab label="My rooms" className={classes.toggleRooms} />
+        <Tab label="All rooms" className={classes.toggleRooms} />
+      </Tabs>
       <TextField
         id="searchRoom"
         className={classes.searchRoom}
@@ -74,22 +78,24 @@ const ListRoom = (props) => {
         margin="normal"
         InputProps={{ type: 'search' }}
       />
-      <div className={classes.toolbar}>
-        <List className={classes.rooms}>
-          {rooms &&
-            rooms.map((room, index) => (
-              <ListItem key={index} button>
-                <Avatar>{room.title && room.title[0]}</Avatar>
-                <ListItemText
-                  primary={room.title}
-                  style={{ paddingLeft: 10 }}
-                />
-              </ListItem>
-            ))}
-        </List>
-      </div>
+      <List className={classes.rooms}>
+        {rooms &&
+          toggleList === 0 &&
+          rooms.map((room, index) => (
+            <ListItem key={index} button>
+              <Avatar>{room.title && room.title[0]}</Avatar>
+              <ListItemText primary={room.title} style={{ paddingLeft: 10 }} />
+            </ListItem>
+          ))}
+        {toggleList === 1 && (
+          <ListItem button>
+            <Avatar>T</Avatar>
+            <ListItemText primary="title" style={{ paddingLeft: 10 }} />
+          </ListItem>
+        )}
+      </List>
       <AddDropDownMenu />
-    </div>
+    </>
   );
 
   return (

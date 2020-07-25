@@ -4,7 +4,7 @@
   "description": "",
   "license": "ISC",
   "scripts": {
-    "start": "npx webpack-dev-server --mode development --hot",
+    "start": "npx webpack-dev-server --mode development --hot --port 3000",
     "build": "webpack --mode production",
     "lint": "npx eslint --ext .js,.jsx,.ts,.tsx --fix ./",
     "test": "npx jest",
@@ -46,11 +46,13 @@
     "@material-ui/core": "^4.11.0",
     "@material-ui/icons": "^4.9.1",
     "@material-ui/lab": "^4.0.0-alpha.56",
+    "@reduxjs/toolkit": "^1.4.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-redux": "^7.2.0",
     "react-router-dom": "^5.2.0",
     "redux": "^4.0.5",
+    "redux-thunk": "^2.3.0",
     "styled-components": "^5.1.1"
   }
 }
