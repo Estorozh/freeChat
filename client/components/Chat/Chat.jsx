@@ -37,11 +37,9 @@ function Chat(props) {
     setMobileOpen(!mobileOpen);
   };
 
-  props.authFromLocalStorage({ type: 'LOGIN_FROM_LOCALESTORAGE' });
-
   return (
     <>
-      {!localStorage.getItem('isAuth') && <Redirect to="/" />}
+      {!localStorage.getItem('isAuth') && <Redirect to="./" />}
       <CssBaseline />
       <AppBar position="fixed" className={classes.appBar}>
         <Toolbar>

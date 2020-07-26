@@ -28,6 +28,11 @@ const useStyles = makeStyles((theme) =>
   })
 );
 
+function login(name) {
+  localStorage.setItem('isAuth', true);
+  localStorage.setItem('user', name);
+}
+
 const Auth = (props) => {
   const classes = useStyles();
   const isAuth = localStorage.getItem('isAuth');
@@ -39,13 +44,13 @@ const Auth = (props) => {
   return (
     <>
       {/* //TODO сделать редирект на отдельно выделенную комнату */}
-      {isAuth && <Redirect to="/chat" />}
+      {isAuth && <Redirect to="./chat" />}
       <Paper elevation={3} className={classes.auth}>
         <h4 className={classes.title}>Input your name</h4>
         <form
           onSubmit={(e) => {
             e.preventDefault();
-            props.login(name);
+            login(name);
           }}
         >
           <TextField
@@ -63,7 +68,7 @@ const Auth = (props) => {
             variant="contained"
             color="primary"
             className={classes.btn}
-            onClick={() => props.login(name)}
+            onClick={() => login(name)}
           >
             Send
           </Button>

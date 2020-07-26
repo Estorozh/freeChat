@@ -27,9 +27,10 @@ const useStyles = makeStyles(() =>
   })
 );
 
-export default function MessageInput(props) {
+function MessageInput(props) {
   const classes = useStyles();
   const [msg, setMsg] = useState('');
+
   function handleSubmit(e) {
     e.preventDefault();
     setMsg('');
@@ -53,3 +54,5 @@ export default function MessageInput(props) {
     </div>
   );
 }
+
+export default MessageInput;

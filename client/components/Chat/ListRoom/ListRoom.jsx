@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { AddDropDownMenu } from '@c/_elements/AddDropDownMenu';
+import React, { useState, useEffect } from 'react';
+// import { AddDropDownMenu } from '@c/_elements/AddDropDownMenu';
 import { makeStyles, createStyles, useTheme } from '@material-ui/core/styles';
 import {
   Avatar,
@@ -31,9 +31,9 @@ const useStyles = makeStyles((theme) =>
     toggleRooms: {
       minWidth: '50%',
     },
-    searchRoom: {
+    addRoom: {
       width: 260,
-      marginTop: 5,
+      margin: '12px 0',
       left: 'calc(50% - 130px)',
     },
     rooms: {
@@ -58,6 +58,12 @@ const ListRoom = (props) => {
   const handleToggleList = (_, val) => {
     setToggleList(val);
   };
+  // if (toggleList === 1) {
+  //   useEffect(()=> {
+      
+  //   }, [toggleList])
+  // }
+
 
   const listRoom = (
     <>
@@ -71,13 +77,16 @@ const ListRoom = (props) => {
         <Tab label="My rooms" className={classes.toggleRooms} />
         <Tab label="All rooms" className={classes.toggleRooms} />
       </Tabs>
-      <TextField
+      {/* <TextField
         id="searchRoom"
         className={classes.searchRoom}
         label="Search chat room"
         margin="normal"
         InputProps={{ type: 'search' }}
-      />
+      /> */}
+      <Button variant="contained" color="primary" className={classes.addRoom}>
+        ADD ROOM
+      </Button>
       <List className={classes.rooms}>
         {rooms &&
           toggleList === 0 &&
@@ -94,7 +103,7 @@ const ListRoom = (props) => {
           </ListItem>
         )}
       </List>
-      <AddDropDownMenu />
+      {/* <AddDropDownMenu /> */}
     </>
   );
 
@@ -111,7 +120,7 @@ const ListRoom = (props) => {
             paper: classes.drawerPaper,
           }}
           ModalProps={{
-            keepMounted: true, // Better open performance on mobile.
+            keepMounted: true,
           }}
         >
           {listRoom}

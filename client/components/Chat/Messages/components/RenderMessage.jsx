@@ -22,6 +22,10 @@ const useStyles = makeStyles(() =>
     clientMessage: {
       backgroundColor: '#dfecfb',
     },
+    time: {
+      fz: 11,
+      color: '#666',
+    },
   })
 );
 
@@ -30,6 +34,7 @@ export default function RenderMessage(props) {
   const classes = useStyles();
   const clientMessage = msg.user === localStorage.getItem('user');
   const userAvatar = <Avatar>{msg.user[0]}</Avatar>;
+
   const message = (
     <>
       {!clientMessage && (
@@ -54,6 +59,7 @@ export default function RenderMessage(props) {
         ].join(' ')}
       >
         {message}
+        <span className={classes.time}>{msg.time}</span>
       </Paper>
       {clientMessage && userAvatar}
     </div>
