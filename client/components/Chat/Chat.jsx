@@ -66,7 +66,7 @@ function Chat(props) {
         mobileOpen={mobileOpen}
         handleDrawerToggle={handleDrawerToggle}
       />
-      <Messages />
+      <Messages name={props.name} />
     </>
   );
 }

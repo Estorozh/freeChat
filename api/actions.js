@@ -1,6 +1,6 @@
 module.exports = class GetMessage {
   getMessage(str) {
-    return typeof str === 'string' ? str : 'ksdjflkgjdsfjg';
+    return typeof str === 'string' ? str : 'alowed only string type in text';
   }
 
   response(ws, data) {
@@ -15,5 +15,19 @@ module.exports = class GetMessage {
     } else {
       ws.send(JSON.stringify(errors['400']));
     }
+  }
+};
+
+module.exports = class Connection {
+  response(ws, data) {
+    io.on('connection', (client) => {
+      console.log('a user connected');
+
+      client.on('chat', (data) => {
+        console.log('recieved message - ', data);
+
+        io.emit('chat', data);
+      });
+    });
   }
 };

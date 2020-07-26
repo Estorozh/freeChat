@@ -28,14 +28,14 @@ const useStyles = makeStyles(() =>
 export default function RenderMessage(props) {
   const { msg, index } = props;
   const classes = useStyles();
-  const clientMessage = msg.sender === 'me';
-  const userAvatar = <Avatar>{msg.sender[0]}</Avatar>;
+  const clientMessage = msg.user === localStorage.getItem('user');
+  const userAvatar = <Avatar>{msg.user[0]}</Avatar>;
   const message = (
     <>
       {!clientMessage && (
-        <Typography style={{ fontWeight: 700 }}>{msg.sender}</Typography>
+        <Typography style={{ fontWeight: 700 }}>{msg.user}</Typography>
       )}
-      <Typography variant="body1">{msg.text}</Typography>
+      <Typography variant="body1">{msg.message}</Typography>
     </>
   );
 

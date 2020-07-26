@@ -1,9 +1,11 @@
 const GetMessage = require('../actions');
+const Connection = require('../actions');
 const errors = require('./errors');
 
 module.exports = class Router {
   constructor() {
     this.getMessage = new GetMessage();
+    this.connection = new Connection();
   }
 
   parseRequest(msg) {
@@ -24,7 +26,9 @@ module.exports = class Router {
         case 'getMessage':
           this.getMessage.response(ws, data);
           break;
-
+        case 'connection':
+          this.connection();
+          break;
         default:
           console.log('data', data.get)
           ws.send(JSON.stringify(errors['404']));

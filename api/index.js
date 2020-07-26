@@ -4,7 +4,9 @@ const Router = require('./routes/api');
 let router = new Router();
 let app = express();
 let port = process.env.PORT || 9000;
-let expressWS = require('express-ws')(app);
+// let expressWS = require('express-ws')(app);
+let http = require('http').createServer(app);
+let io = require('socket.io')(http);
 
 app.ws('/', function (ws, req, next) {
   ws.on('message', function (msg) {

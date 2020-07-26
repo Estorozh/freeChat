@@ -7,3 +7,4 @@ dist
 test.js
 api/node_modules
 api/server.js
+server/node_modules

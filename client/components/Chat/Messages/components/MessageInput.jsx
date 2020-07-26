@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { makeStyles, createStyles } from '@material-ui/core/styles';
-import { AttachFile as AttachFileIcon } from '@material-ui/icons';
+import SendIcon from '@material-ui/icons/Send';
 import { Paper, Input } from '@material-ui/core';
 
 const useStyles = makeStyles(() =>
@@ -14,27 +14,41 @@ const useStyles = makeStyles(() =>
       marginTop: 10,
     },
     messageInput: {
-      paddingLeft: 30,
+      paddingRight: 40,
       paddingBottom: 3,
       padding: '5px 0 3px 30px',
     },
-    addFile: {
+    sendMessage: {
       position: 'absolute',
-      top: 5,
-      left: 3,
+      top: 7,
+      right: 3,
       cursor: 'pointer',
     },
   })
 );
 
-export default function MessageInput() {
+export default function MessageInput(props) {
   const classes = useStyles();
+  const [msg, setMsg] = useState('');
+  function handleSubmit(e) {
+    e.preventDefault();
+    setMsg('');
+    props.sendMessage(msg);
+  }
 
   return (
     <div className={classes.messageInputWrapper}>
-      <AttachFileIcon className={classes.addFile} />
       <Paper className={classes.messageInput} elevation={6}>
-        <Input fullWidth placeholder="Type your message…" />
+        <form action="" onSubmit={handleSubmit}>
+          <Input
+            fullWidth
+            placeholder="Type your message…"
+            onChange={(e) => setMsg(e.target.value)}
+            // onSubmit={() => props.sendMessage()}
+            value={msg}
+          />
+          <SendIcon className={classes.sendMessage} onClick={handleSubmit} />
+        </form>
       </Paper>
     </div>
   );
