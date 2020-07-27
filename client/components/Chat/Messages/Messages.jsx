@@ -34,7 +34,6 @@ function Messages(props) {
 
   useEffect(() => {
     io.emit('connection');
-    io.emit('create room', props.name);
     return () => io.disconnect();
   }, []);
 

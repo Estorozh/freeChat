@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-// import { AddDropDownMenu } from '@c/_elements/AddDropDownMenu';
-import { makeStyles, createStyles, useTheme } from '@material-ui/core/styles';
+import { useStyles } from './stylesListRoom';
+import { useTheme } from '@material-ui/core/styles';
 import {
   Avatar,
   Button,
@@ -13,46 +13,14 @@ import {
   Tabs,
   Tab,
 } from '@material-ui/core';
-import { rooms } from '@/mock-file.json';
-
-const useStyles = makeStyles((theme) =>
-  createStyles({
-    // necessary for content to be below app bar
-    toolbar: theme.mixins.toolbar,
-    drawer: {
-      [theme.breakpoints.up('sm')]: {
-        width: drawerWidth,
-        flexShrink: 0,
-      },
-    },
-    drawerPaper: {
-      width: drawerWidth,
-    },
-    toggleRooms: {
-      minWidth: '50%',
-    },
-    addRoom: {
-      width: 260,
-      margin: '12px 0',
-      left: 'calc(50% - 130px)',
-    },
-    rooms: {
-      height: 'calc(100vh - 120px)',
-      overflowY: 'auto',
-    },
-    selectList: {
-      display: 'flex',
-      justifyContent: 'space-between',
-      marginTop: 10,
-      padding: '0 10px',
-    },
-  })
-);
+// import { AddDropDownMenu } from '@c/_elements/AddDropDownMenu';
 
 const ListRoom = (props) => {
   const classes = useStyles();
   const theme = useTheme();
   const [toggleList, setToggleList] = useState(0);
+  const [rooms, setRooms] = useState([]);
+  const [users, setUsers] = useState([]);
 
   const handleToggleList = (_, val) => {
     setToggleList(val);
@@ -60,13 +28,19 @@ const ListRoom = (props) => {
   const createRoom = () => {
     const room = prompt('Введите название новой комнаты');
     io.emit('create room', room);
-  }
-  // if (toggleList === 1) {
-  //   useEffect(()=> {
-      
-  //   }, [toggleList])
-  // }
+  };
 
+  useEffect(() => {
+    io.emit('reqRoomsUsers', toggleList);
+    io.on('resRoomsUsers', (data) => {
+      console.log('ListRoom - ', data);
+      if (toggleList == 0) {
+        setRooms(data);
+      } else {
+        setUsers(data);
+      }
+    });
+  }, [toggleList]);
 
   const listRoom = (
     <>
@@ -77,8 +51,8 @@ const ListRoom = (props) => {
         textColor="primary"
         indicatorColor="primary"
       >
-        <Tab label="My rooms" className={classes.toggleRooms} />
-        <Tab label="All rooms" className={classes.toggleRooms} />
+        <Tab label="Rooms" className={classes.toggleRooms} />
+        <Tab label="Users" className={classes.toggleRooms} />
       </Tabs>
       {/* <TextField
         id="searchRoom"
@@ -87,24 +61,37 @@ const ListRoom = (props) => {
         margin="normal"
         InputProps={{ type: 'search' }}
       /> */}
-      <Button variant="contained" color="primary" className={classes.addRoom} onClick={createRoom}>
+      <Button
+        variant="contained"
+        color="primary"
+        className={classes.addRoom}
+        onClick={createRoom}
+      >
         ADD ROOM
       </Button>
       <List className={classes.rooms}>
+        {/* TODO разобраться почему не могу пользоваться здесь room.name */}
         {rooms &&
           toggleList === 0 &&
-          rooms.map((room, index) => (
+          rooms.map((_, index) => (
             <ListItem key={index} button>
-              <Avatar>{room.title && room.title[0]}</Avatar>
-              <ListItemText primary={room.title} style={{ paddingLeft: 10 }} />
+              <Avatar>{rooms[index] && rooms[index][0]}</Avatar>
+              <ListItemText
+                primary={rooms[index]}
+                style={{ paddingLeft: 10 }}
+              />
             </ListItem>
           ))}
-        {toggleList === 1 && (
-          <ListItem button>
-            <Avatar>T</Avatar>
-            <ListItemText primary="title" style={{ paddingLeft: 10 }} />
-          </ListItem>
-        )}
+        {toggleList === 1 &&
+          users.map((_, index) => (
+            <ListItem key={index} button>
+              <Avatar>{users[index] && users[index][0]}</Avatar>
+              <ListItemText
+                primary={users[index]}
+                style={{ paddingLeft: 10 }}
+              />
+            </ListItem>
+          ))}
       </List>
       {/* <AddDropDownMenu /> */}
     </>

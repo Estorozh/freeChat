@@ -7,13 +7,12 @@ const Auth = ({ history }) => {
   const [name, setName] = useState('');
   const [isIncorrect, toggleIsIncorrect] = useState(false);
 
-  // io.emit('chat', { message: 'gdfg', user: 'Anonim', time: '42' });
   function login(name) {
     if (isIncorrect) {
       return;
     }
     localStorage.setItem('user', name);
-    history.push(`/chat_${name}`, `Room ${name}`);
+    history.push(`/chat_general`, `Room general`);
   }
 
   function handleChangeInput(e) {

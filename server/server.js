@@ -11,40 +11,68 @@ io.listen(5000);
 // });
 
 var FreeChat = {
-  chatRooms: [],
-  // [{
-  //   title: '',
-  //   link: '',
-  //   messages: [],
-  // }],
+  chatRooms: {
+    general: {
+      name: 'general',
+      link: '/chat_general',
+      messages: [],
+    },
+  },
+  // string:
+  // {
+  //   name: string,
+  //   link: string,
+  //   messages: array,
+  // }
   users: {},
   //{
-  //  name: '',
-  //  chatRooms: [],
-  //  activeRoom: '',
+  //  name: string,
+  //  activeRoom: string,
   //},
 };
 
 io.on('connection', (client) => {
   let { chatRooms, users } = FreeChat;
+  users[client.id] = {
+    name: 'anonim',
+    activeRoom: 'General',
+  };
+  let user = users[client.id];
+  client.join(user.activeRoom);
   // eslint-disable-next-line no-console
   console.log('a user connected ' + client.id);
 
-  client.on('create room', (name) => {
-    users[client.id] = { name, chatRooms: [name], activeRoom: name };
+  client.on('auth', (name) => {
+    user.name = name;
+  });
 
-    // если такая комната уже есть, то только присоединить пользователя
-    let isRepeated = !chatRooms.filter((room) => room.title === name).length;
-    if (isRepeated) {
-      chatRooms.push({ title: name, link: `chat_${name}` });
+  //TODO отправить список всех пользователей
+
+  //TODO отправить список всех комнат
+  client.on('reqRoomsUsers', (numberList) => {
+    let target = chatRooms;
+    if (numberList == 1) {
+      target = users;
+    }
+    let data = Object.values(target).map((data) => data.name);
+    io.emit('resRoomsUsers', data);
+  });
+
+  //TODO при входе с именем, но с отличным url делать смену активной комнаты
+
+  client.on('create room', (name) => {
+    let isRepeated = Object.keys(chatRooms).filter(
+      (room) => room.name === name
+    );
+    if (!isRepeated.length) {
+      chatRooms[name] = { name, link: `chat_${name}` };
     }
     client.join(name);
-    console.log(isRepeated)
-    // оповещаем пользователей в комнате о входе
+    //TODO оповещаем пользователей в комнате о входе
     // client
     //   .to(users[client.id].activeRoom)
     //   .emit('join user', users[client.id].name);
-    console.log(chatRooms.map((o) => o.link));
+    // console.log(chatRooms.map((o) => o.link));
     // io.sockets.connected[client.id].emit('send name', name);
   });
 
@@ -52,12 +80,12 @@ io.on('connection', (client) => {
     delete users[client.id];
   });
 
-  //TODO при подключении отправлять сообщение о подключении
+  //TODO отправляем сообщение в комнату в которой находимся
   client.on('chat', (data) => {
     // const { room, message } = data;
     // eslint-disable-next-line no-console
     console.log('Message received -->', data);
-    io.to(users[client.id].activeRoom).emit('chat', data);
+    io.to(user.activeRoom).emit('chat', data);
 
     // client.to(room).emit('message', data);
 
@@ -84,7 +112,7 @@ io.on('connection', (client) => {
   //   // по не проверенной информации должно отправить только вызвавшему клиенту
   //   io.sockets.socket(client.id).emit(
   //     'getRooms',
-  //     FreeChat.rooms.map((room) => room.title)
+  //     FreeChat.rooms.map((room) => room.name)
   //   );
   // });
 });

@@ -36,6 +36,7 @@ function Chat(props) {
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
+  io.emit('auth', name);
 
   return (
     <>
