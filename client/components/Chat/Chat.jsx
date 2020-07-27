@@ -37,9 +37,11 @@ function Chat(props) {
     setMobileOpen(!mobileOpen);
   };
 
+  console.log(props)
+
   return (
     <>
-      {!localStorage.getItem('isAuth') && <Redirect to="./" />}
+      {/* {!localStorage.getItem('isAuth') && <Redirect to="./" />} */}
       <CssBaseline />
       <AppBar position="fixed" className={classes.appBar}>
         <Toolbar>

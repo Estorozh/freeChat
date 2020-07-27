@@ -1,50 +1,18 @@
 import React, { useState } from 'react';
 import { Button, Paper, TextField } from '@material-ui/core';
-import { makeStyles, createStyles } from '@material-ui/core/styles';
-import { Redirect } from 'react-router-dom';
+import { useStyles } from './stylesAuth';
 
-const useStyles = makeStyles((theme) =>
-  createStyles({
-    auth: {
-      display: 'flex',
-      flexWrap: 'wrap',
-      alignItems: 'center',
-      justifyContent: 'center',
-      alignSelf: 'center',
-      margin: '0 auto',
-      padding: 20,
-    },
-    title: {
-      width: '100%',
-      textAlign: 'center',
-      marginTop: 0,
-      marginBottom: 5,
-    },
-    btn: {
-      width: '50%',
-      float: 'right',
-      marginTop: 10,
-    },
-  })
-);
-
-function login(name) {
-  localStorage.setItem('isAuth', true);
-  localStorage.setItem('user', name);
-}
-
-const Auth = (props) => {
+const Auth = ({ history }) => {
   const classes = useStyles();
-  const isAuth = localStorage.getItem('isAuth');
   const [name, setName] = useState('');
-  const handleUsernameInput = (e) => {
-    setName(e.target.value);
-  };
+
+  function login(name) {
+    history.push(`/chat_${name}`, `Room ${name}`);
+    io.emit('create_room', name);
+  }
 
   return (
     <>
-      {/* //TODO сделать редирект на отдельно выделенную комнату */}
-      {isAuth && <Redirect to="./chat" />}
       <Paper elevation={3} className={classes.auth}>
         <h4 className={classes.title}>Input your name</h4>
         <form
@@ -55,7 +23,7 @@ const Auth = (props) => {
         >
           <TextField
             name="name"
-            onChange={handleUsernameInput}
+            onChange={(e) => setName(e.target.value)}
             required={true}
             placeholder="your name..."
             type="text"
