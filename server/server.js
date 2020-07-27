@@ -11,14 +11,18 @@ io.listen(5000);
 // });
 
 var FreeChat = {
-  chatRooms: [
-    {
-      title: 'Hello Worlds',
-      link: 'helloWorlds',
-      messages: [],
-    },
-  ],
+  chatRooms: [],
+  // [{
+  //   title: '',
+  //   link: '',
+  //   messages: [],
+  // }],
   users: {},
+  //{
+  //  name: '',
+  //  chatRooms: [],
+  //  activeRoom: '',
+  //},
 };
 
 io.on('connection', (client) => {
@@ -29,9 +33,18 @@ io.on('connection', (client) => {
   client.on('create room', (name) => {
     users[client.id] = { name, chatRooms: [name], activeRoom: name };
 
-    chatRooms.push({ title: name, link: `chat_${name}` });
+    // если такая комната уже есть, то только присоединить пользователя
+    let isRepeated = !chatRooms.filter((room) => room.title === name).length;
+    if (isRepeated) {
+      chatRooms.push({ title: name, link: `chat_${name}` });
+    }
     client.join(name);
-    console.log(chatRooms.map(o=>o.link))
+    console.log(isRepeated)
+    // оповещаем пользователей в комнате о входе
+    // client
+    //   .to(users[client.id].activeRoom)
+    //   .emit('join user', users[client.id].name);
+    console.log(chatRooms.map((o) => o.link));
     // io.sockets.connected[client.id].emit('send name', name);
   });
 
@@ -44,11 +57,14 @@ io.on('connection', (client) => {
     // const { room, message } = data;
     // eslint-disable-next-line no-console
     console.log('Message received -->', data);
+    io.to(users[client.id].activeRoom).emit('chat', data);
 
     // client.to(room).emit('message', data);
 
     // io.emit('chat', data);
-    client.to(users[client.id].activeRoom).emit('chat', data);
+
+    //TODO ниже код пишет в личные сообщения если в to поставить имя пользователя
+    // io.to(users[client.id].activeRoom).emit('chat', data);
   });
 
   //TODO кто-то печатает
