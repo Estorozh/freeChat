@@ -53,11 +53,14 @@ const ListRoom = (props) => {
   const classes = useStyles();
   const theme = useTheme();
   const [toggleList, setToggleList] = useState(0);
-  // const container =
-  //   window !== undefined ? () => window().document.body : undefined;
+
   const handleToggleList = (_, val) => {
     setToggleList(val);
   };
+  const createRoom = () => {
+    const room = prompt('Введите название новой комнаты');
+    io.emit('create room', room);
+  }
   // if (toggleList === 1) {
   //   useEffect(()=> {
       
@@ -84,7 +87,7 @@ const ListRoom = (props) => {
         margin="normal"
         InputProps={{ type: 'search' }}
       /> */}
-      <Button variant="contained" color="primary" className={classes.addRoom}>
+      <Button variant="contained" color="primary" className={classes.addRoom} onClick={createRoom}>
         ADD ROOM
       </Button>
       <List className={classes.rooms}>

@@ -30,8 +30,8 @@ io.on('connection', (client) => {
     users[client.id] = { name, chatRooms: [name], activeRoom: name };
 
     chatRooms.push({ title: name, link: `chat_${name}` });
-    console.log('join to room', name);
     client.join(name);
+    console.log(chatRooms.map(o=>o.link))
     // io.sockets.connected[client.id].emit('send name', name);
   });
 
