@@ -11,19 +11,33 @@ io.listen(5000);
 // });
 
 var FreeChat = {
-  rooms: [
+  chatRooms: [
     {
       title: 'Hello Worlds',
       link: 'helloWorlds',
       messages: [],
     },
   ],
-  users: [],
+  users: {},
 };
 
 io.on('connection', (client) => {
+  let { chatRooms, users } = FreeChat;
   // eslint-disable-next-line no-console
   console.log('a user connected ' + client.id);
+
+  client.on('create room', (name) => {
+    users[client.id] = { name, chatRooms: [name], activeRoom: name };
+
+    chatRooms.push({ title: name, link: `chat_${name}` });
+    console.log('join to room', name);
+    client.join(name);
+    // io.sockets.connected[client.id].emit('send name', name);
+  });
+
+  client.on('disconnect', () => {
+    delete users[client.id];
+  });
 
   //TODO при подключении отправлять сообщение о подключении
   client.on('chat', (data) => {
@@ -33,7 +47,8 @@ io.on('connection', (client) => {
 
     // client.to(room).emit('message', data);
 
-    io.emit('chat', data);
+    // io.emit('chat', data);
+    client.to(users[client.id].activeRoom).emit('chat', data);
   });
 
   //TODO кто-то печатает

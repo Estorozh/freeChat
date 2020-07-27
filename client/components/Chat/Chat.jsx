@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
   AppBar,
   IconButton,
@@ -31,13 +31,11 @@ const useStyles = makeStyles((theme) =>
 
 function Chat(props) {
   const classes = useStyles();
-  const [mobileOpen, setMobileOpen] = React.useState(false);
-
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const [name, _] = useState(localStorage.getItem('user'));
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
-
-  console.log(props)
 
   return (
     <>
@@ -58,7 +56,7 @@ function Chat(props) {
             Free Chat
           </Typography>
           <Typography variant="h6" noWrap style={{ marginLeft: 'auto' }}>
-            {props.name}
+            {name}
           </Typography>
         </Toolbar>
       </AppBar>
@@ -66,7 +64,7 @@ function Chat(props) {
         mobileOpen={mobileOpen}
         handleDrawerToggle={handleDrawerToggle}
       />
-      <Messages name={props.name} />
+      <Messages name={name} />
     </>
   );
 }

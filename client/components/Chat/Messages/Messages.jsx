@@ -1,23 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { makeStyles, createStyles } from '@material-ui/core/styles';
 import RenderMessage from './components/RenderMessage';
 import MessageInput from './components/MessageInput';
+import { useStyles } from './stylesMessages';
 
 // import socket from 'socket.io-client';
 // import { SocketContext } from '@c/App';
-
-const useStyles = makeStyles((theme) =>
-  createStyles({
-    content: {
-      position: 'relative',
-      flexGrow: 1,
-      minHeight: '100%',
-      padding: theme.spacing(3),
-    },
-    // necessary for content to be below app bar
-    toolbar: theme.mixins.toolbar,
-  })
-);
 
 function Messages(props) {
   const classes = useStyles();
@@ -47,6 +34,7 @@ function Messages(props) {
 
   useEffect(() => {
     io.emit('connection');
+    io.emit('create room', props.name);
     return () => io.disconnect();
   }, []);
 

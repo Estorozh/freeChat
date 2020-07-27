@@ -5,10 +5,20 @@ import { useStyles } from './stylesAuth';
 const Auth = ({ history }) => {
   const classes = useStyles();
   const [name, setName] = useState('');
+  const [isIncorrect, toggleIsIncorrect] = useState(false);
 
+  // io.emit('chat', { message: 'gdfg', user: 'Anonim', time: '42' });
   function login(name) {
+    if (isIncorrect) {
+      return;
+    }
+    localStorage.setItem('user', name);
     history.push(`/chat_${name}`, `Room ${name}`);
-    io.emit('create_room', name);
+  }
+
+  function handleChangeInput(e) {
+    setName(e.target.value);
+    toggleIsIncorrect(!/[a-zA-Zа-яА-ЯёЁ]/g.test(name));
   }
 
   return (
@@ -23,12 +33,12 @@ const Auth = ({ history }) => {
         >
           <TextField
             name="name"
-            onChange={(e) => setName(e.target.value)}
+            onChange={handleChangeInput}
             required={true}
             placeholder="your name..."
             type="text"
             value={name}
-            error={!/[a-zA-Zа-яА-ЯёЁ]/g.test(name) && name != ''}
+            error={isIncorrect}
             title="allowed only latin and cyrilic character"
             style={{ width: '100%' }}
           />
