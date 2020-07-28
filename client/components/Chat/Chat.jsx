@@ -37,8 +37,17 @@ function Chat({ history }) {
     setMobileOpen(!mobileOpen);
   };
   io.emit('auth', name);
+
   if (history.action == 'POP') {
-    io.emit('join', location.pathname.replace('/chat_', ''));
+    let room = location.pathname.replace('/chat_', '');
+
+    let isEmptySubscribe =
+      JSON.parse(localStorage.getItem('subscribeRoom')) == null;
+    if (isEmptySubscribe) {
+      localStorage.setItem('subscribeRoom', JSON.stringify({ [room]: true }));
+    }
+
+    io.emit('join', room);
   }
 
   io.on('relocate', (room) => history.push(room));

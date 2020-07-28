@@ -31,5 +31,9 @@ export const useStyles = makeStyles((theme) =>
       marginTop: 10,
       padding: '0 10px',
     },
+    checkbox: {
+      position: 'absolute',
+      right: 10,
+    },
   })
 );

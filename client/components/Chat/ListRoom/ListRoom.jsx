@@ -14,7 +14,6 @@ import {
   Tab,
 } from '@material-ui/core';
 import { withRouter } from 'react-router-dom';
-// import { AddDropDownMenu } from '@c/_elements/AddDropDownMenu';
 
 const ListRoom = (props) => {
   const classes = useStyles();
@@ -22,6 +21,8 @@ const ListRoom = (props) => {
   const [toggleList, setToggleList] = useState(0);
   const [rooms, setRooms] = useState([]);
   const [users, setUsers] = useState([]);
+  let subscribe = JSON.parse(localStorage.getItem('subscribeRoom'));
+  const [subscribeRoom, addSubscribeRoom] = useState(subscribe);
 
   const handleToggleList = (_, val) => {
     setToggleList(val);
@@ -45,6 +46,15 @@ const ListRoom = (props) => {
   let relocated = (room) => {
     io.emit('join', room);
   };
+
+  io.on('subscribe room', (rooms) => {
+    addSubscribeRoom(rooms);
+    localStorage.setItem('subscribeRoom', JSON.stringify(subscribeRoom));
+  });
+  useEffect(() => {
+    let subscribed = JSON.parse(localStorage.getItem('subscribeRoom')) || {};
+    io.emit('uploadSubscribeRooms', subscribed);
+  }, []);
 
   const listRoom = (
     <>
@@ -71,19 +81,27 @@ const ListRoom = (props) => {
         {rooms &&
           toggleList === 0 &&
           rooms.map((room, index) => (
-            <ListItem
-              key={index}
-              button
-              onClick={() => {
-                relocated(room);
-              }}
-            >
-              <Avatar>{rooms[index] && rooms[index][0]}</Avatar>
-              <ListItemText
-                primary={rooms[index]}
-                style={{ paddingLeft: 10 }}
-              />
-            </ListItem>
+            <label key={room}>
+              <ListItem
+                button
+                onClick={() => {
+                  relocated(room);
+                }}
+              >
+                <input
+                  type="radio"
+                  style={{ display: 'none' }}
+                  defaultChecked={subscribe[room]}
+                />
+                <Avatar className="avaRoom">
+                  {rooms[index] && rooms[index][0]}
+                </Avatar>
+                <ListItemText
+                  primary={rooms[index]}
+                  style={{ paddingLeft: 10 }}
+                />
+              </ListItem>
+            </label>
           ))}
         {toggleList === 1 &&
           users.map((_, index) => (
