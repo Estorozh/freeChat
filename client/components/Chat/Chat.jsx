@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   AppBar,
   IconButton,
@@ -28,16 +28,20 @@ const useStyles = makeStyles((theme) =>
   })
 );
 
-function Chat({history}) {
+function Chat({ history }) {
   const classes = useStyles();
+  const thisRoom = history.location.pathname;
   const [mobileOpen, setMobileOpen] = useState(false);
   const [name, _] = useState(localStorage.getItem('user') || auth());
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
   io.emit('auth', name);
-  console.log(history)
-  history.listen()
+  if (history.action == 'POP') {
+    io.emit('join', location.pathname.replace('/chat_', ''));
+  }
+
+  io.on('relocate', (room) => history.push(room));
 
   return (
     <>

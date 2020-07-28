@@ -11,6 +11,7 @@ function Messages(props) {
   let content = useRef(null);
   const [message, setMessage] = useState('');
   const [allMessages, setAllMessages] = useState([]);
+  const [members, setMembers] = useState([]);
   // const { io } = React.useContext(SocketContext);
   const formatTime = new Intl.DateTimeFormat('ru', {
     day: 'numeric',
@@ -46,6 +47,7 @@ function Messages(props) {
   return (
     <main className={classes.content} ref={content}>
       <div className={classes.toolbar} />
+      {members && members.map(user=> <p>{user}</p>)}
 
       {allMessages &&
         allMessages.map((msg, i) => <RenderMessage msg={msg} key={i} />)}

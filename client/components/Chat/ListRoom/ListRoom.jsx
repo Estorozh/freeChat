@@ -13,6 +13,7 @@ import {
   Tabs,
   Tab,
 } from '@material-ui/core';
+import { withRouter } from 'react-router-dom';
 // import { AddDropDownMenu } from '@c/_elements/AddDropDownMenu';
 
 const ListRoom = (props) => {
@@ -33,7 +34,6 @@ const ListRoom = (props) => {
   useEffect(() => {
     io.emit('reqRoomsUsers', toggleList);
     io.on('resRoomsUsers', (data) => {
-      console.log('ListRoom - ', data);
       if (toggleList == 0) {
         setRooms(data);
       } else {
@@ -41,6 +41,10 @@ const ListRoom = (props) => {
       }
     });
   }, [toggleList]);
+
+  let relocated = (room) => {
+    io.emit('join', room);
+  };
 
   const listRoom = (
     <>
@@ -51,16 +55,9 @@ const ListRoom = (props) => {
         textColor="primary"
         indicatorColor="primary"
       >
-        <Tab label="Rooms" className={classes.toggleRooms} />
-        <Tab label="Users" className={classes.toggleRooms} />
+        <Tab label="All rooms" className={classes.toggleRooms} />
+        <Tab label="Users online" className={classes.toggleRooms} />
       </Tabs>
-      {/* <TextField
-        id="searchRoom"
-        className={classes.searchRoom}
-        label="Search chat room"
-        margin="normal"
-        InputProps={{ type: 'search' }}
-      /> */}
       <Button
         variant="contained"
         color="primary"
@@ -73,8 +70,14 @@ const ListRoom = (props) => {
         {/* TODO разобраться почему не могу пользоваться здесь room.name */}
         {rooms &&
           toggleList === 0 &&
-          rooms.map((_, index) => (
-            <ListItem key={index} button>
+          rooms.map((room, index) => (
+            <ListItem
+              key={index}
+              button
+              onClick={() => {
+                relocated(room);
+              }}
+            >
               <Avatar>{rooms[index] && rooms[index][0]}</Avatar>
               <ListItemText
                 primary={rooms[index]}
@@ -93,7 +96,6 @@ const ListRoom = (props) => {
             </ListItem>
           ))}
       </List>
-      {/* <AddDropDownMenu /> */}
     </>
   );
 
@@ -131,4 +133,4 @@ const ListRoom = (props) => {
   );
 };
 
-export default ListRoom;
+export default withRouter(ListRoom);

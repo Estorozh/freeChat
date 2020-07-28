@@ -6,13 +6,14 @@ const Auth = ({ history }) => {
   const classes = useStyles();
   const [name, setName] = useState('');
   const [isIncorrect, toggleIsIncorrect] = useState(false);
+  io.on('relocate', (room) => history.push(room));
 
   function login(name) {
     if (isIncorrect) {
       return;
     }
     localStorage.setItem('user', name);
-    history.push(`/chat_general`);
+    io.emit('join');
   }
 
   function handleChangeInput(e) {
