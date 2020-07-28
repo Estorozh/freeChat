@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import {
   AppBar,
   IconButton,
@@ -10,7 +10,6 @@ import ListRoom from './ListRoom/ListRoom';
 import Messages from './Messages/Messages';
 import { Menu as MenuIcon } from '@material-ui/icons';
 import { makeStyles, createStyles } from '@material-ui/core/styles';
-import { Redirect } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -29,14 +28,16 @@ const useStyles = makeStyles((theme) =>
   })
 );
 
-function Chat(props) {
+function Chat({history}) {
   const classes = useStyles();
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [name, _] = useState(localStorage.getItem('user'));
+  const [name, _] = useState(localStorage.getItem('user') || auth());
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
   io.emit('auth', name);
+  console.log(history)
+  history.listen()
 
   return (
     <>
@@ -68,6 +69,15 @@ function Chat(props) {
       <Messages name={name} />
     </>
   );
+}
+
+function auth() {
+  let name = prompt('введите ваше имя латиницой или кирилицей');
+  if (name != null && /[a-zA-Zа-яА-ЯёЁ]/g.test(name)) {
+    localStorage.setItem('user', name);
+    return name;
+  }
+  return auth();
 }
 
 export default Chat;

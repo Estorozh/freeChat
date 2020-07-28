@@ -12,7 +12,7 @@ const Auth = ({ history }) => {
       return;
     }
     localStorage.setItem('user', name);
-    history.push(`/chat_general`, `Room general`);
+    history.push(`/chat_general`);
   }
 
   function handleChangeInput(e) {

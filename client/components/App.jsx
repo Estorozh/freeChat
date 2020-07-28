@@ -1,12 +1,6 @@
 import React from 'react';
 import { useStyles } from './stylesApp';
-import {
-  BrowserRouter,
-  Route,
-  Switch,
-  Redirect,
-  Router,
-} from 'react-router-dom';
+import { BrowserRouter, Route, Redirect, Switch } from 'react-router-dom';
 import Chat from '@c/Chat/Chat';
 import Auth from '@c/Auth/Auth';
 import socket from 'socket.io-client';
@@ -23,11 +17,11 @@ export function App() {
   const classes = useStyles();
   return (
     // <SocketContext.Provider value={io}>
-    <BrowserRouter history={history}>
+    <BrowserRouter>
       <div className={classes.root}>
         <Switch>
           <Route exact path="/" component={Auth} />
-          <Route path="/chat_:name" component={Chat} />
+          <Route exact path="/chat_:name" component={Chat} />
           <Redirect to="/" />
         </Switch>
       </div>

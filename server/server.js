@@ -1,6 +1,5 @@
 const express = require('express');
 const app = express();
-
 var http = require('http').createServer(app);
 var io = require('socket.io')(http);
 
@@ -9,27 +8,6 @@ io.listen(5000);
 // app.get('/api', (req, res) => {
 //   res.sendFile(__dirname, 'index.html');
 // });
-
-var FreeChat = {
-  chatRooms: {
-    general: {
-      name: 'general',
-      link: '/chat_general',
-      messages: [],
-    },
-  },
-  // string:
-  // {
-  //   name: string,
-  //   link: string,
-  //   messages: array,
-  // }
-  users: {},
-  //{
-  //  name: string,
-  //  activeRoom: string,
-  //},
-};
 
 io.on('connection', (client) => {
   let { chatRooms, users } = FreeChat;
@@ -116,3 +94,26 @@ io.on('connection', (client) => {
   //   );
   // });
 });
+
+
+var FreeChat = {
+  chatRooms: {
+    general: {
+      name: 'General',
+      link: '/chat_general',
+      messages: [],
+    },
+  },
+  // nameRoom:
+  // {
+  //   name: string,
+  //   link: string,
+  //   messages: array,
+  // }
+  users: {},
+  //{
+  //  name: string,
+  //  activeRoom: string,
+  //  connectedRooms: array
+  //},
+};
