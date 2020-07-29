@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useCallback } from 'react';
 import RenderMessage from './components/RenderMessage';
 import MessageInput from './components/MessageInput';
 import { useStyles } from './stylesMessages';
@@ -21,11 +21,14 @@ function Messages(props) {
     second: 'numeric',
   });
 
-  const sendMessage = (message) => {
-    const time = formatTime.format(new Date());
-    io.emit('chat', { message, user: props.name, time });
-    setMessage('');
-  };
+  const sendMessage = useCallback(
+    (message) => {
+      const time = formatTime.format(new Date());
+      io.emit('chat', { message, user: props.name, time });
+      setMessage('');
+    },
+    [props.name]
+  );
 
   io.once('resMessages', (messages) => {
     setAllMessages(messages);
@@ -44,7 +47,7 @@ function Messages(props) {
   return (
     <main className={classes.content} ref={content}>
       <div className={classes.toolbar} />
-      {members && members.map(user=> <p>{user}</p>)}
+      {members && members.map((user) => <p>{user}</p>)}
 
       {allMessages &&
         allMessages.map((msg, i) => <RenderMessage msg={msg} key={i} />)}

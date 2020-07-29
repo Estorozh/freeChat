@@ -6,7 +6,7 @@ import {
   Toolbar,
   Typography,
 } from '@material-ui/core';
-import ListRoom from './ListRoom/ListRoom';
+import ListRoomUser from './ListRoomUser/ListRoomUser';
 import Messages from './Messages/Messages';
 import { Menu as MenuIcon } from '@material-ui/icons';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
@@ -82,7 +82,7 @@ function Chat({ history }) {
           </Typography>
         </Toolbar>
       </AppBar>
-      <ListRoom
+      <ListRoomUser
         mobileOpen={mobileOpen}
         handleDrawerToggle={handleDrawerToggle}
       />

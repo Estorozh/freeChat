@@ -37,12 +37,8 @@ io.on('connection', (client) => {
     // console.log(` ${user.name} active room ${user.activeRoomLink.replace('/chat_', '')}`)
   });
 
-  // отправляем список комнат или пользователей
   client.on('reqRoomsUsers', (numberList) => {
-    let target = chatRooms;
-    if (numberList == 1) {
-      target = users;
-    }
+    let target = numberList === 0 ? chatRooms : users;
     client.emit('resRoomsUsers', getRoomsUsers(target));
   });
 
@@ -56,7 +52,7 @@ io.on('connection', (client) => {
     if (user.activeRoomLink != '') client.leave(user.activeRoomLink);
     user.activeRoomLink = room;
     client.join(room);
-    client.emit('resMessages', chatRooms[room].messages);
+    client.emit('resMessages', chatRooms[room].messages || []);
     client.emit('relocate', `/chat_${room}`);
   }
 
@@ -82,7 +78,7 @@ function testingRepeatingRoom(name) {
   let { chatRooms } = FreeChat;
   let shouldAddRoom = Object.keys(chatRooms).filter((room) => room === name);
   if (!shouldAddRoom.length) {
-    chatRooms[name] = { name, link: `chat_${name}` };
+    chatRooms[name] = { name, link: `chat_${name}`, messages: [] };
     io.emit('resRoomsUsers', getRoomsUsers(chatRooms));
   }
 }
