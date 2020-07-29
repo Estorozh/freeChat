@@ -38,6 +38,8 @@ function Messages(props) {
     setAllMessages([...allMessages, data]);
   });
 
+  io.once('sendListUsers', (listUsers) => setMembers(listUsers));
+
   useEffect(() => {
     if (content.current) {
       content.current.scrollIntoView(false);
@@ -47,7 +49,13 @@ function Messages(props) {
   return (
     <main className={classes.content} ref={content}>
       <div className={classes.toolbar} />
-      {members && members.map((user) => <p>{user}</p>)}
+      <div className={classes.usersInRoom}>
+        <span>В комнате: </span>
+        {members &&
+          members.map(
+            (user) => user != 'anonim' && <span key={user}> {user} </span>
+          )}
+      </div>
 
       {allMessages &&
         allMessages.map((msg, i) => <RenderMessage msg={msg} key={i} />)}

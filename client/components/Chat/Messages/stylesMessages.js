@@ -10,5 +10,10 @@ export const useStyles = makeStyles((theme) =>
     },
     // necessary for content to be below app bar
     toolbar: theme.mixins.toolbar,
+    usersInRoom: {
+      position: 'relative',
+      top: -20,
+      color: '#888',
+    }
   })
 );

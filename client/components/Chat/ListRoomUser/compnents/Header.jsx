@@ -9,8 +9,13 @@ export const Header = ({ toggleList, setToggleList }) => {
   };
 
   const createRoom = () => {
-    const room = prompt('Введите название новой комнаты');
-    io.emit('create room', room);
+    const room = prompt(
+      'Введите кирилицей или латиницей название новой комнаты'
+    );
+    if (room != null && /[a-zA-Zа-яА-ЯёЁ]/g.test(room)) {
+      return io.emit('create room', room);
+    }
+    return createRoom();
   };
 
   return (

@@ -7,7 +7,7 @@ io.listen(5000);
 
 io.on('connection', (client) => {
   let { chatRooms, users } = FreeChat;
-  users[client.id] = { name: 'anonim' };
+  users[client.id] = { name: 'anonim', activeRoomLink: '' };
   let user = users[client.id];
   console.log('a user connected ' + client.id);
   if (user.name == 'anonim') {
@@ -30,11 +30,11 @@ io.on('connection', (client) => {
 
   client.on('chat', (data) => {
     io.to(user.activeRoomLink).emit('chat', data);
-    chatRooms[user.activeRoomLink].messages.push(data);
-    client.emit('resMessages', chatRooms[user.activeRoomLink].messages);
-    // console.log(Object.entries(io.clients().server.eio.clients)); //TODO выводит список пользователей
-    // console.log('rooms', Object.keys(client.rooms)) //TODO выводит список комнат в которых пользователь подписан почистить localstorage и поправить инпуты
-    // console.log(` ${user.name} active room ${user.activeRoomLink.replace('/chat_', '')}`)
+    let room = chatRooms[user.activeRoomLink];
+    if (!room) testingRepeatingRoom(room);
+    room.messages.push(data);
+    io.to(user.activeRoomLink).emit('resMessages', room.messages);
+    
   });
 
   client.on('reqRoomsUsers', (numberList) => {
@@ -48,12 +48,28 @@ io.on('connection', (client) => {
   });
 
   function join(room) {
-    //изначально было с подпиской на множество комнат, но так логичней, что человек ходит по комнатам
-    if (user.activeRoomLink != '') client.leave(user.activeRoomLink);
+    const listUsers = chatRooms[room].users;
+    const oldRoom = user.activeRoomLink;
+    //изначально было с подпиской на множество комнат, но логичней, что человек ходит по комнатам
+    if (oldRoom != '') {
+      client.leave(oldRoom);
+      if (chatRooms[oldRoom].users[user.name]) {
+        delete chatRooms[oldRoom].users[user.name];
+        io.to(oldRoom).emit(
+          'sendListUsers',
+          Object.keys(chatRooms[oldRoom].users)
+        );
+      }
+    }
     user.activeRoomLink = room;
     client.join(room);
-    client.emit('resMessages', chatRooms[room].messages || []);
+    listUsers[user.name] = true;
+    if (!chatRooms[room]) testingRepeatingRoom(room);
+    client.emit('resMessages', chatRooms[room].messages);
+    io.to(room).emit('sendListUsers', Object.keys(listUsers));
     client.emit('relocate', `/chat_${room}`);
+    console.log('===============================')
+    console.log(chatRooms);
   }
 
   function checkOnNewJoin(room) {
@@ -78,7 +94,7 @@ function testingRepeatingRoom(name) {
   let { chatRooms } = FreeChat;
   let shouldAddRoom = Object.keys(chatRooms).filter((room) => room === name);
   if (!shouldAddRoom.length) {
-    chatRooms[name] = { name, link: `chat_${name}`, messages: [] };
+    chatRooms[name] = { name, link: `chat_${name}`, messages: [], users: {} };
     io.emit('resRoomsUsers', getRoomsUsers(chatRooms));
   }
 }
@@ -104,11 +120,13 @@ var FreeChat = {
       name: 'general',
       link: '/chat_general',
       messages: [],
+      users: {},
     },
     flood: {
       name: 'flood',
       link: '/chat_flood',
       messages: [],
+      users: {},
     },
   },
   // nameRoom:
@@ -116,6 +134,7 @@ var FreeChat = {
   //   name: string,
   //   link: string,
   //   messages: array,
+  //   users: object
   // }
   users: {},
   //{
