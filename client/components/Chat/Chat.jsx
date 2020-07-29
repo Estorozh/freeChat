@@ -42,7 +42,7 @@ function Chat({ history }) {
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
-  io.once('auth', () => io.emit('auth', name));
+  io.emit('auth', name);
 
   if (history.action == 'POP') {
     let room = location.pathname.replace('/chat_', '');

@@ -10,9 +10,6 @@ io.on('connection', (client) => {
   users[client.id] = { name: 'anonim', activeRoomLink: '' };
   let user = users[client.id];
   console.log('a user connected ' + client.id);
-  if (user.name == 'anonim') {
-    client.emit('auth');
-  }
 
   client.on('auth', (name) => {
     user.name = name;
@@ -33,8 +30,7 @@ io.on('connection', (client) => {
     let room = chatRooms[user.activeRoomLink];
     if (!room) testingRepeatingRoom(room);
     room.messages.push(data);
-    io.to(user.activeRoomLink).emit('resMessages', room.messages);
-    
+    client.emit('resMessages', room.messages);
   });
 
   client.on('reqRoomsUsers', (numberList) => {
@@ -48,8 +44,20 @@ io.on('connection', (client) => {
   });
 
   function join(room) {
+    if (!chatRooms[room]) testingRepeatingRoom(room);
+
     const listUsers = chatRooms[room].users;
-    const oldRoom = user.activeRoomLink;
+    leave(user.activeRoomLink);
+    user.activeRoomLink = room;
+    client.join(room);
+    listUsers[user.name] = true;
+
+    client.emit('resMessages', chatRooms[room].messages);
+    io.to(room).emit('sendListUsers', Object.keys(listUsers));
+    client.emit('relocate', `/chat_${room}`);
+  }
+
+  function leave(oldRoom) {
     //изначально было с подпиской на множество комнат, но логичней, что человек ходит по комнатам
     if (oldRoom != '') {
       client.leave(oldRoom);
@@ -61,15 +69,6 @@ io.on('connection', (client) => {
         );
       }
     }
-    user.activeRoomLink = room;
-    client.join(room);
-    listUsers[user.name] = true;
-    if (!chatRooms[room]) testingRepeatingRoom(room);
-    client.emit('resMessages', chatRooms[room].messages);
-    io.to(room).emit('sendListUsers', Object.keys(listUsers));
-    client.emit('relocate', `/chat_${room}`);
-    console.log('===============================')
-    console.log(chatRooms);
   }
 
   function checkOnNewJoin(room) {

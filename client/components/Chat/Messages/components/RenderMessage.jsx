@@ -1,33 +1,6 @@
 import React from 'react';
 import { Avatar, Typography, Paper } from '@material-ui/core';
-import { makeStyles, createStyles } from '@material-ui/core/styles';
-
-const useStyles = makeStyles(() =>
-  createStyles({
-    wrapMessage: {
-      display: 'flex',
-      justifyContent: 'flex-start',
-      width: '100%',
-      marginTop: 10,
-    },
-    wrapMyMessage: {
-      justifyContent: 'flex-end',
-    },
-    message: {
-      maxWidth: '70%',
-      minWidth: '10%',
-      margin: '0 10px',
-      padding: 5,
-    },
-    clientMessage: {
-      backgroundColor: '#dfecfb',
-    },
-    time: {
-      fz: 11,
-      color: '#666',
-    },
-  })
-);
+import { useStyles } from './stylesRenderMessage';
 
 export default function RenderMessage(props) {
   const { msg, index } = props;

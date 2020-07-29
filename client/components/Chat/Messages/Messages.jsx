@@ -3,16 +3,12 @@ import RenderMessage from './components/RenderMessage';
 import MessageInput from './components/MessageInput';
 import { useStyles } from './stylesMessages';
 
-// import socket from 'socket.io-client';
-// import { SocketContext } from '@c/App';
-
 function Messages(props) {
   const classes = useStyles();
   let content = useRef(null);
   const [message, setMessage] = useState('');
   const [allMessages, setAllMessages] = useState([]);
   const [members, setMembers] = useState([]);
-  // const { io } = React.useContext(SocketContext);
   const formatTime = new Intl.DateTimeFormat('ru', {
     day: 'numeric',
     month: 'numeric',
@@ -38,7 +34,9 @@ function Messages(props) {
     setAllMessages([...allMessages, data]);
   });
 
-  io.once('sendListUsers', (listUsers) => setMembers(listUsers));
+  io.once('sendListUsers', (members) => {
+    setMembers(members);
+  });
 
   useEffect(() => {
     if (content.current) {

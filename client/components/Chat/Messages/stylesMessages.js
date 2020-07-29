@@ -14,6 +14,6 @@ export const useStyles = makeStyles((theme) =>
       position: 'relative',
       top: -20,
       color: '#888',
-    }
+    },
   })
 );
