@@ -20,7 +20,7 @@ const useStyles = makeStyles(() =>
     },
     sendMessage: {
       position: 'absolute',
-      top: 7,
+      top: 10,
       right: 7,
       transform: 'rotate(-90deg)',
       cursor: 'pointer',

@@ -50,6 +50,6 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: './public/index.html',
     }),
-    new BundleAnalyzerPlugin({ openAnalyzer: false }),
+    new BundleAnalyzerPlugin({ openAnalyzer: false, analyzerMode: 'static' }),
   ],
 };

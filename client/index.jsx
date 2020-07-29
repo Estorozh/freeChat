@@ -6,5 +6,5 @@ import socket from 'socket.io-client';
 window.io = socket('localhost:5000', {
   transports: ['websocket', 'polling', 'flashsocket'],
 });
-window.drawerWidth = 280;
+window.drawerWidth = 320;
 render(<App />, document.getElementById('root'));
