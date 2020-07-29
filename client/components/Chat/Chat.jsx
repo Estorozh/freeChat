@@ -37,20 +37,19 @@ const useStyles = makeStyles((theme) =>
 
 function Chat({ history }) {
   const classes = useStyles();
-  const thisRoom = history.location.pathname;
   const [mobileOpen, setMobileOpen] = useState(false);
   const [name, _] = useState(localStorage.getItem('user') || auth());
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
-  io.emit('auth', name);
+  io.once('auth', () => io.emit('auth', name));
 
   if (history.action == 'POP') {
     let room = location.pathname.replace('/chat_', '');
     io.emit('join', room);
   }
 
-  io.on('relocate', (room) => history.push(room));
+  io.once('relocate', (room) => history.push(room));
 
   return (
     <>

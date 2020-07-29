@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useStyles } from './stylesApp';
 import { BrowserRouter, Route, Redirect, Switch } from 'react-router-dom';
 import Chat from '@c/Chat/Chat';
@@ -6,6 +6,12 @@ import Auth from '@c/Auth/Auth';
 
 export function App() {
   const classes = useStyles();
+
+  useEffect(() => {
+    io.emit('connection');
+    return () => io.disconnect();
+  }, []);
+
   return (
     <div className={classes.root}>
       <BrowserRouter>

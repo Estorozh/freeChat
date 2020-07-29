@@ -17,6 +17,7 @@ import { withRouter } from 'react-router-dom';
 const ListRoom = (props) => {
   const classes = useStyles();
   const theme = useTheme();
+  const thisRoom = location.pathname.replace('/chat_', '');
   const [toggleList, setToggleList] = useState(0);
   const [rooms, setRooms] = useState([]);
   const [users, setUsers] = useState([]);
@@ -31,7 +32,7 @@ const ListRoom = (props) => {
 
   useEffect(() => {
     io.emit('reqRoomsUsers', toggleList);
-    io.on('resRoomsUsers', (data) => {
+    io.once('resRoomsUsers', (data) => {
       if (toggleList == 0) {
         setRooms(data);
       } else {
@@ -41,11 +42,12 @@ const ListRoom = (props) => {
   }, [toggleList]);
 
   let relocated = (room) => {
+    console.log('переключаемся на room');
     io.emit('join', room);
   };
 
   let isChecked = (room) => {
-    return location.pathname.replace('/chat_', '') == room;
+    return thisRoom == room;
   };
 
   const listRoom = (

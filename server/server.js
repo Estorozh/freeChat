@@ -10,6 +10,9 @@ io.on('connection', (client) => {
   users[client.id] = { name: 'anonim' };
   let user = users[client.id];
   console.log('a user connected ' + client.id);
+  if (user.name == 'anonim') {
+    client.emit('auth');
+  }
 
   client.on('auth', (name) => {
     user.name = name;
@@ -26,14 +29,12 @@ io.on('connection', (client) => {
   });
 
   client.on('chat', (data) => {
-    // eslint-disable-next-line no-console
-    console.log('Message received -->', data);
     io.to(user.activeRoomLink).emit('chat', data);
+    chatRooms[user.activeRoomLink].messages.push(data);
+    client.emit('resMessages', chatRooms[user.activeRoomLink].messages);
     // console.log(Object.entries(io.clients().server.eio.clients)); //TODO выводит список пользователей
     // console.log('rooms', Object.keys(client.rooms)) //TODO выводит список комнат в которых пользователь подписан почистить localstorage и поправить инпуты
     // console.log(` ${user.name} active room ${user.activeRoomLink.replace('/chat_', '')}`)
-
-    chatRooms[user.activeRoomLink].messages.push(data);
   });
 
   // отправляем список комнат или пользователей
@@ -46,6 +47,7 @@ io.on('connection', (client) => {
   });
 
   client.on('disconnect', () => {
+    console.log(`${user.name} disconnected`);
     delete users[client.id];
   });
 

@@ -6,7 +6,7 @@ const Auth = ({ history }) => {
   const classes = useStyles();
   const [name, setName] = useState('');
   const [isIncorrect, toggleIsIncorrect] = useState(false);
-  io.on('relocate', (room) => history.push(room));
+  io.once('relocate', (room) => history.push(room));
 
   function login(name) {
     if (isIncorrect) {
@@ -48,7 +48,7 @@ const Auth = ({ history }) => {
             className={classes.btn}
             onClick={() => login(name)}
           >
-            Send
+            Log in
           </Button>
         </form>
       </Paper>

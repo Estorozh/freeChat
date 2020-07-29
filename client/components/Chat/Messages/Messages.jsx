@@ -27,25 +27,18 @@ function Messages(props) {
     setMessage('');
   };
 
-  useEffect(() => {
-    io.on('chat', (data) => {
-      setAllMessages([...allMessages, data]);
-    });
-  }, [allMessages]);
+  io.once('resMessages', (messages) => {
+    setAllMessages(messages);
+  });
 
-  useEffect(() => {
-    io.emit('connection');
-    return () => io.disconnect();
-  }, []);
+  io.once('chat', (data) => {
+    setAllMessages([...allMessages, data]);
+  });
 
   useEffect(() => {
     if (content.current) {
       content.current.scrollIntoView(false);
     }
-  });
-
-  io.on('resMessages', (messages) => {
-    setAllMessages(messages);
   });
 
   return (
