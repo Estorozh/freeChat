@@ -44,6 +44,10 @@ function Messages(props) {
     }
   });
 
+  io.on('resMessages', (messages) => {
+    setAllMessages(messages);
+  });
+
   return (
     <main className={classes.content} ref={content}>
       <div className={classes.toolbar} />

@@ -21,7 +21,8 @@ const useStyles = makeStyles(() =>
     sendMessage: {
       position: 'absolute',
       top: 7,
-      right: 3,
+      right: 7,
+      transform: 'rotate(-90deg)',
       cursor: 'pointer',
     },
   })
@@ -48,7 +49,11 @@ function MessageInput(props) {
             // onSubmit={() => props.sendMessage()}
             value={msg}
           />
-          <SendIcon className={classes.sendMessage} onClick={handleSubmit} />
+          <SendIcon
+            className={classes.sendMessage}
+            color="primary"
+            onClick={handleSubmit}
+          />
         </form>
       </Paper>
     </div>

@@ -9,6 +9,7 @@ import {
 import ListRoom from './ListRoom/ListRoom';
 import Messages from './Messages/Messages';
 import { Menu as MenuIcon } from '@material-ui/icons';
+import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import { makeStyles, createStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles((theme) =>
@@ -25,6 +26,12 @@ const useStyles = makeStyles((theme) =>
         display: 'none',
       },
     },
+    exit: {
+      position: 'relative',
+      top: 5,
+      cursor: 'pointer',
+      marginLeft: 10,
+    },
   })
 );
 
@@ -40,13 +47,6 @@ function Chat({ history }) {
 
   if (history.action == 'POP') {
     let room = location.pathname.replace('/chat_', '');
-
-    let isEmptySubscribe =
-      JSON.parse(localStorage.getItem('subscribeRoom')) == null;
-    if (isEmptySubscribe) {
-      localStorage.setItem('subscribeRoom', JSON.stringify({ [room]: true }));
-    }
-
     io.emit('join', room);
   }
 
@@ -72,6 +72,14 @@ function Chat({ history }) {
           </Typography>
           <Typography variant="h6" noWrap style={{ marginLeft: 'auto' }}>
             {name}
+            <ExitToAppIcon
+              className={classes.exit}
+              onClick={() => {
+                localStorage.clear();
+                history.push('/');
+              }}
+              color="action"
+            />
           </Typography>
         </Toolbar>
       </AppBar>

@@ -6,7 +6,6 @@ import {
   Button,
   Drawer,
   Hidden,
-  TextField,
   List,
   ListItem,
   ListItemText,
@@ -21,8 +20,6 @@ const ListRoom = (props) => {
   const [toggleList, setToggleList] = useState(0);
   const [rooms, setRooms] = useState([]);
   const [users, setUsers] = useState([]);
-  let subscribe = JSON.parse(localStorage.getItem('subscribeRoom'));
-  const [subscribeRoom, addSubscribeRoom] = useState(subscribe);
 
   const handleToggleList = (_, val) => {
     setToggleList(val);
@@ -47,14 +44,9 @@ const ListRoom = (props) => {
     io.emit('join', room);
   };
 
-  io.on('subscribe room', (rooms) => {
-    addSubscribeRoom(rooms);
-    localStorage.setItem('subscribeRoom', JSON.stringify(subscribeRoom));
-  });
-  useEffect(() => {
-    let subscribed = JSON.parse(localStorage.getItem('subscribeRoom')) || {};
-    io.emit('uploadSubscribeRooms', subscribed);
-  }, []);
+  let isChecked = (room) => {
+    return location.pathname.replace('/chat_', '') == room;
+  };
 
   const listRoom = (
     <>
@@ -90,8 +82,9 @@ const ListRoom = (props) => {
               >
                 <input
                   type="radio"
+                  name="rooms"
                   style={{ display: 'none' }}
-                  defaultChecked={subscribe[room]}
+                  defaultChecked={isChecked(room)}
                 />
                 <Avatar className="avaRoom">
                   {rooms[index] && rooms[index][0]}

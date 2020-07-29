@@ -7,7 +7,7 @@ io.listen(5000);
 
 io.on('connection', (client) => {
   let { chatRooms, users } = FreeChat;
-  users[client.id] = { name: 'anonim', connectedRooms: {} };
+  users[client.id] = { name: 'anonim' };
   let user = users[client.id];
   console.log('a user connected ' + client.id);
 
@@ -25,23 +25,15 @@ io.on('connection', (client) => {
     join(room);
   });
 
-  //отписываемся от комнаты
-  client.on('leave', (room) => {
-    delete user.connectedRooms[room];
-    client.leave(room);
-  });
-
   client.on('chat', (data) => {
     // eslint-disable-next-line no-console
     console.log('Message received -->', data);
     io.to(user.activeRoomLink).emit('chat', data);
-    console.log(Object.entries(io.clients().server.eio.clients)); //TODO выводит список пользователей
-    console.log('rooms', Object.keys(client.rooms)) //TODO выводит список комнат в которых пользователь подписан почистить localstorage и поправить инпуты
+    // console.log(Object.entries(io.clients().server.eio.clients)); //TODO выводит список пользователей
+    // console.log('rooms', Object.keys(client.rooms)) //TODO выводит список комнат в которых пользователь подписан почистить localstorage и поправить инпуты
     // console.log(` ${user.name} active room ${user.activeRoomLink.replace('/chat_', '')}`)
-  });
 
-  client.on('disconnect', () => {
-    delete users[client.id];
+    chatRooms[user.activeRoomLink].messages.push(data);
   });
 
   // отправляем список комнат или пользователей
@@ -53,22 +45,21 @@ io.on('connection', (client) => {
     client.emit('resRoomsUsers', getRoomsUsers(target));
   });
 
-  client.on('uploadSubscribeRooms', (subscribeRooms) => {
-    Object.assign(user.connectedRooms, subscribeRooms);
+  client.on('disconnect', () => {
+    delete users[client.id];
   });
 
   function join(room) {
+    //изначально было с подпиской на множество комнат, но так логичней, что человек ходит по комнатам
+    if (user.activeRoomLink != '') client.leave(user.activeRoomLink);
     user.activeRoomLink = room;
-    Object.assign(user.connectedRooms, { [room]: true });
     client.join(room);
-    client.emit('subscribe room', user.connectedRooms);
+    client.emit('resMessages', chatRooms[room].messages);
     client.emit('relocate', `/chat_${room}`);
   }
 
   function checkOnNewJoin(room) {
-    let isNewJoin = !Object.keys(user.connectedRooms).filter(
-      (croom) => croom == room
-    ).length;
+    let isNewJoin = user.activeRoomLink == room;
     if (isNewJoin) {
       emittedInRoom(room);
     }
@@ -77,7 +68,7 @@ io.on('connection', (client) => {
   function emittedInRoom(room, message) {
     let time = getTime();
     message = message ? message : `*вошел в комнату ${room}*`;
-    client.broadcast.to(user.activeRoomLink).emit('chat', {
+    client.broadcast.to(room).emit('chat', {
       message,
       user: user.name,
       time,
@@ -132,6 +123,5 @@ var FreeChat = {
   //{
   //  name: string,
   //  activeRoomLink: string,
-  //  connectedRooms: object
   //},
 };
