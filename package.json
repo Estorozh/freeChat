@@ -8,15 +8,13 @@
     "serve": "node server.js",
     "front": "npx webpack-dev-server --mode development --hot --port 3000",
     "build": "webpack --mode production",
-    "lint": "npx eslint --ext .js,.jsx,.ts,.tsx --fix ./",
-    "deploy": "gh-pages -d dist"
+    "lint": "npx eslint --ext .js,.jsx --fix ./"
   },
   "devDependencies": {
     "@babel/core": "^7.9.0",
     "@babel/plugin-proposal-class-properties": "^7.8.3",
     "@babel/preset-env": "^7.9.0",
     "@babel/preset-react": "^7.9.4",
-    "@testing-library/react-hooks": "^3.2.1",
     "@types/react": "^16.9.33",
     "@types/react-dom": "^16.9.6",
     "@types/react-router-dom": "^5.1.5",

@@ -9,7 +9,6 @@ module.exports = {
   resolve: {
     extensions: ['.js', '.jsx', '.json'],
     alias: {
-      // components: path.resolve(__dirname, 'src/components'),
       '@': path.resolve(__dirname, 'client'),
       '@c': path.resolve(__dirname, 'client/components'),
     },

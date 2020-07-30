@@ -4,7 +4,7 @@ var http = require('http').createServer(app);
 var io = require('socket.io')(http);
 
 io.listen(5000);
-
+//** Socket.io functions
 io.on('connection', (client) => {
   let { chatRooms, users } = FreeChat;
   users[client.id] = { name: 'anonim', activeRoomLink: '' };
@@ -42,24 +42,24 @@ io.on('connection', (client) => {
     console.log(`${user.name} disconnected`);
     delete users[client.id];
   });
-
+  //** Helpers functions
   function join(room) {
     if (!chatRooms[room]) testingRepeatingRoom(room);
 
     const listUsers = chatRooms[room].users;
-    leave(user.activeRoomLink);
+    leave(user.activeRoomLink, room);
     user.activeRoomLink = room;
     client.join(room);
     listUsers[user.name] = true;
 
+    client.emit('relocate', `/chat_${room}`);
     client.emit('resMessages', chatRooms[room].messages);
     io.to(room).emit('sendListUsers', Object.keys(listUsers));
-    client.emit('relocate', `/chat_${room}`);
   }
 
-  function leave(oldRoom) {
+  function leave(oldRoom, newRoom) {
     //изначально было с подпиской на множество комнат, но логичней, что человек ходит по комнатам
-    if (oldRoom != '') {
+    if (oldRoom != '' && oldRoom != newRoom) {
       client.leave(oldRoom);
       if (chatRooms[oldRoom].users[user.name]) {
         delete chatRooms[oldRoom].users[user.name];
@@ -113,6 +113,7 @@ function getTime() {
   return formatTime.format(new Date());
 }
 
+//** Data
 var FreeChat = {
   chatRooms: {
     general: {
@@ -128,8 +129,7 @@ var FreeChat = {
       users: {},
     },
   },
-  // nameRoom:
-  // {
+  // nameRoom: {
   //   name: string,
   //   link: string,
   //   messages: array,
