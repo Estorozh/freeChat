@@ -4,8 +4,8 @@
   "description": "",
   "license": "ISC",
   "scripts": {
-    "start": "npx webpack-dev-server --mode development --hot --open --port 3000 & node server.js",
-    "serve": "node server.js",
+    "start": "npx webpack-dev-server --mode development --hot --open --port 3000 & node server/server.js",
+    "serve": "node server/server.js",
     "front": "npx webpack-dev-server --mode development --hot --port 3000",
     "build": "webpack --mode production",
     "lint": "npx eslint --ext .js,.jsx --fix ./"
@@ -43,7 +43,9 @@
     "http": "0.0.1-security",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
+    "react-redux": "^7.2.1",
     "react-router-dom": "^5.2.0",
+    "redux": "^4.0.5",
     "socket.io": "^2.3.0",
     "socket.io-client": "^2.3.0"
   }

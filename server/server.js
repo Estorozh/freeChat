@@ -2,6 +2,10 @@ const express = require('express');
 const app = express();
 var http = require('http').createServer(app);
 var io = require('socket.io')(http);
+var FreeChat = require('./data');
+var getTime = require('./helpers/getTime');
+var testingRepeatingRoom = require('./helpers/testingRepeatingRoom');
+var getRoomsUsers = require('./helpers/getRoomsUsers');
 
 io.listen(5000);
 //** Socket.io functions
@@ -9,6 +13,7 @@ io.on('connection', (client) => {
   let { chatRooms, users } = FreeChat;
   users[client.id] = { name: 'anonim', activeRoomLink: '' };
   let user = users[client.id];
+  // eslint-disable-next-line no-console
   console.log('a user connected ' + client.id);
 
   client.on('auth', (name) => {
@@ -39,9 +44,11 @@ io.on('connection', (client) => {
   });
 
   client.on('disconnect', () => {
+    // eslint-disable-next-line no-console
     console.log(`${user.name} disconnected`);
     delete users[client.id];
   });
+
   //** Helpers functions
   function join(room) {
     if (!chatRooms[room]) testingRepeatingRoom(room);
@@ -88,56 +95,3 @@ io.on('connection', (client) => {
     });
   }
 });
-
-function testingRepeatingRoom(name) {
-  let { chatRooms } = FreeChat;
-  let shouldAddRoom = Object.keys(chatRooms).filter((room) => room === name);
-  if (!shouldAddRoom.length) {
-    chatRooms[name] = { name, link: `chat_${name}`, messages: [], users: {} };
-    io.emit('resRoomsUsers', getRoomsUsers(chatRooms));
-  }
-}
-
-function getRoomsUsers(target) {
-  return Object.values(target).map((data) => data.name);
-}
-
-function getTime() {
-  const formatTime = new Intl.DateTimeFormat('ru', {
-    day: 'numeric',
-    month: 'numeric',
-    hour: 'numeric',
-    minute: 'numeric',
-    second: 'numeric',
-  });
-  return formatTime.format(new Date());
-}
-
-//** Data
-var FreeChat = {
-  chatRooms: {
-    general: {
-      name: 'general',
-      link: '/chat_general',
-      messages: [],
-      users: {},
-    },
-    flood: {
-      name: 'flood',
-      link: '/chat_flood',
-      messages: [],
-      users: {},
-    },
-  },
-  // nameRoom: {
-  //   name: string,
-  //   link: string,
-  //   messages: array,
-  //   users: object
-  // }
-  users: {},
-  //{
-  //  name: string,
-  //  activeRoomLink: string,
-  //},
-};
