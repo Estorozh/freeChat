@@ -10,30 +10,7 @@ import ListRoomUser from './ListRoomUser/ListRoomUser';
 import Messages from './Messages/Messages';
 import { Menu as MenuIcon } from '@material-ui/icons';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
-import { makeStyles, createStyles } from '@material-ui/core/styles';
-
-const useStyles = makeStyles((theme) =>
-  createStyles({
-    appBar: {
-      [theme.breakpoints.up('sm')]: {
-        width: `calc(100% - ${drawerWidth}px)`,
-        marginLeft: drawerWidth,
-      },
-    },
-    menuButton: {
-      marginRight: theme.spacing(2),
-      [theme.breakpoints.up('sm')]: {
-        display: 'none',
-      },
-    },
-    exit: {
-      position: 'relative',
-      top: 5,
-      cursor: 'pointer',
-      marginLeft: 10,
-    },
-  })
-);
+import useStyles from './stylesChat';
 
 function Chat({ history }) {
   const classes = useStyles();

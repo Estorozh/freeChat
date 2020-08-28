@@ -11,6 +11,7 @@ module.exports = {
     alias: {
       '@': path.resolve(__dirname, 'client'),
       '@c': path.resolve(__dirname, 'client/components'),
+      '@r': path.resolve(__dirname, 'client/redux'),
     },
   },
   output: {

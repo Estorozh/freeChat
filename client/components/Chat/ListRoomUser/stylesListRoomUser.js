@@ -6,12 +6,12 @@ export const useStyles = makeStyles((theme) =>
     toolbar: theme.mixins.toolbar,
     drawer: {
       [theme.breakpoints.up('sm')]: {
-        width: drawerWidth,
+        width: 320,
         flexShrink: 0,
       },
     },
     drawerPaper: {
-      width: drawerWidth,
+      width: 320,
     },
     toggleRooms: {
       minWidth: '50%',
