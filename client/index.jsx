@@ -5,7 +5,7 @@ import socket from 'socket.io-client';
 import store from '@r/store';
 import { Provider } from 'react-redux';
 
-window.io = socket('188.227.14.86:5000', {
+window.io = socket('unlock-code.org:5000', {
   transports: ['websocket', 'polling', 'flashsocket'],
 });
 

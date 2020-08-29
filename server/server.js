@@ -44,8 +44,6 @@ io.on('connection', (client) => {
   });
 
   client.on('disconnect', () => {
-    // eslint-disable-next-line no-console
-    console.log(`${user.name} disconnected`);
     delete users[client.id];
   });
 

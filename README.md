@@ -7,7 +7,7 @@
 
 Requires docker installed  
 Go to the server folder `cd server`  
-Build the image with the docker command `build -t server-free-chat/node-web-app .`  
+Build the image with the docker command `docker build -t server-free-chat/node-web-app .`  
 After building, run the image interactively with the command line command `docker run -p 5000:5000 -it server-free-chat/node-web-app bash`  
 Start server with command `npm run serve`  
 After that, change the address of the address to your server and collect in production

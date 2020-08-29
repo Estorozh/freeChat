@@ -35,7 +35,7 @@ function Messages(props) {
   });
 
   io.once('sendListUsers', (members) => {
-    setMembers(members);
+    setMembers(members.filter((member) => member != 'undefined'));
   });
 
   useEffect(() => {
