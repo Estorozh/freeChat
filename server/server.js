@@ -55,7 +55,9 @@ io.on('connection', (client) => {
     leave(user.activeRoomLink, room);
     user.activeRoomLink = room;
     client.join(room);
-    listUsers[user.name] = true;
+    if (user.name != 'undefined') {
+      listUsers[user.name] = true;
+    }
 
     client.emit('relocate', `/chat_${room}`);
     client.emit('resMessages', chatRooms[room].messages);
