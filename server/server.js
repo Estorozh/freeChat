@@ -44,8 +44,6 @@ io.on('connection', (client) => {
   });
 
   client.on('disconnect', () => {
-    // eslint-disable-next-line no-console
-    console.log(`${user.name} disconnected`);
     delete users[client.id];
   });
 
@@ -65,7 +63,6 @@ io.on('connection', (client) => {
   }
 
   function leave(oldRoom, newRoom) {
-    //изначально было с подпиской на множество комнат, но логичней, что человек ходит по комнатам
     if (oldRoom != '' && oldRoom != newRoom) {
       client.leave(oldRoom);
       if (chatRooms[oldRoom].users[user.name]) {

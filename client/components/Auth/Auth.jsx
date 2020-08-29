@@ -13,6 +13,7 @@ const Auth = ({ history }) => {
       return;
     }
     localStorage.setItem('user', name);
+    io.emit('auth');
     io.emit('join');
   }
 
@@ -41,6 +42,7 @@ const Auth = ({ history }) => {
             error={isIncorrect}
             title="allowed only latin and cyrilic character"
             style={{ width: '100%' }}
+            autoComplete="off"
           />
           <Button
             variant="contained"
